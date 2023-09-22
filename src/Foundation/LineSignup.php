@@ -103,6 +103,7 @@ trait LineSignUp
         if ($user) {
             Auth::guard($this->guard)->login($user);
         } else {
+            $this->accountDoesNotExist($profile);
         }
 
         return redirect()->route($this->lineSignupRedirectRouteName);

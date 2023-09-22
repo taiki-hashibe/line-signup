@@ -64,6 +64,7 @@ trait LineSignUp
         $res = curl_exec($curl);
         curl_close($curl);
         $json = json_decode($res);
+
         $accessToken = $json->access_token;
 
         return $accessToken;

@@ -27,16 +27,16 @@ trait LineSignUp
     public function lineLogin(): RedirectResponse
     {
         $state = Str::random(32);
-        $uri = "https://access.line.me/oauth2/v2.1/authorize?";
-        $response_type = "response_type=code";
-        $client_id = "&client_id=" . config($this->lineSignupConfigKeys['channel_id']);
-        $redirect_uri = "&redirect_uri=" . config($this->lineSignupConfigKeys['callback_url']);
-        $state_uri = "&state=" . $state;
-        $scope = "&scope=openid%20profile";
-        $prompt = "&prompt=consent";
-        $nonce_uri = "&nonce=";
+        $uri = 'https://access.line.me/oauth2/v2.1/authorize?';
+        $response_type = 'response_type=code';
+        $client_id = '&client_id='.config($this->lineSignupConfigKeys['channel_id']);
+        $redirect_uri = '&redirect_uri='.config($this->lineSignupConfigKeys['callback_url']);
+        $state_uri = '&state='.$state;
+        $scope = '&scope=openid%20profile';
+        $prompt = '&prompt=consent';
+        $nonce_uri = '&nonce=';
 
-        $uri = $uri . $response_type . $client_id . $redirect_uri . $state_uri . $scope . $prompt . $nonce_uri;
+        $uri = $uri.$response_type.$client_id.$redirect_uri.$state_uri.$scope.$prompt.$nonce_uri;
 
         return redirect($uri);
     }
@@ -74,7 +74,7 @@ trait LineSignUp
     {
 
         $curl = curl_init();
-        curl_setopt($curl, CURLOPT_HTTPHEADER, ['Authorization: Bearer ' . $at]);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, ['Authorization: Bearer '.$at]);
         curl_setopt($curl, CURLOPT_URL, 'https://api.line.me/v2/profile');
         curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'GET');
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);

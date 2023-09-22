@@ -11,9 +11,9 @@ use Illuminate\Support\Str;
 trait LineSignUp
 {
     public $lineSignupConfigKeys = [
-        'cannel_id' => 'line-signup.line_login.cannel_id',
-        'callback_url' => 'line-signup.line_login.channel_secret',
-        'client_secret' => 'line-signup.line_login.callback_url'
+        'channel_id' => 'line-signup.line_login.channel_id',
+        'callback_url' => 'line-signup.line_login.callback_url',
+        'client_secret' => 'line-signup.line_login.channel_secret'
     ];
     public string $lineSignupModelClass = '';
     public string $lineSignupGuard = 'web';
@@ -45,7 +45,7 @@ trait LineSignUp
             'grant_type'    => 'authorization_code',
             'code'          => $req['code'],
             'redirect_uri'  => config($this->lineSignupConfigKeys['callback_url']),
-            'cannel_id'     =>  config($this->lineSignupConfigKeys['cannel_id']),
+            'client_id'     =>  config($this->lineSignupConfigKeys['channel_id']),
             'client_secret' => config($this->lineSignupConfigKeys['client_secret']),
         );
         $url = 'https://api.line.me/oauth2/v2.1/token';
@@ -61,6 +61,7 @@ trait LineSignUp
         $res = curl_exec($curl);
         curl_close($curl);
         $json = json_decode($res);
+        dump($json);
         $accessToken = $json->access_token;
 
         return $accessToken;

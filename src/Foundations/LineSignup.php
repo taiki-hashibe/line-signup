@@ -13,27 +13,31 @@ trait LineSignUp
     public $configKeys = [
         'client_id' => '',
         'callback_url' => '',
-        'client_secret' => ''
+        'client_secret' => '',
     ];
+
     public string $modelClass = '';
+
     public string $guard = 'web';
+
     public string $lineIdColumnName = 'line_id';
+
     public string $redirectRouteName = '';
 
     public function lineLogin(): RedirectResponse
     {
         $state = Str::random(32);
 
-        $uri = "https://access.line.me/oauth2/v2.1/authorize?";
-        $response_type = "response_type=code";
-        $client_id = "&client_id=" . config($this->configKeys['client_id']);
-        $redirect_uri = "&redirect_uri=" . config($this->configKeys['callback_url']);
-        $state_uri = "&state=" . $state;
-        $scope = "&scope=openid%20profile";
-        $prompt = "&prompt=consent";
-        $nonce_uri = "&nonce=";
+        $uri = 'https://access.line.me/oauth2/v2.1/authorize?';
+        $response_type = 'response_type=code';
+        $client_id = '&client_id='.config($this->configKeys['client_id']);
+        $redirect_uri = '&redirect_uri='.config($this->configKeys['callback_url']);
+        $state_uri = '&state='.$state;
+        $scope = '&scope=openid%20profile';
+        $prompt = '&prompt=consent';
+        $nonce_uri = '&nonce=';
 
-        $uri = $uri . $response_type . $client_id . $redirect_uri . $state_uri . $scope . $prompt . $nonce_uri;
+        $uri = $uri.$response_type.$client_id.$redirect_uri.$state_uri.$scope.$prompt.$nonce_uri;
 
         return redirect($uri);
     }
@@ -41,13 +45,13 @@ trait LineSignUp
     public function getAccessToken($req): mixed
     {
         $headers = ['Content-Type: application/x-www-form-urlencoded'];
-        $post_data = array(
-            'grant_type'    => 'authorization_code',
-            'code'          => $req['code'],
-            'redirect_uri'  => config($this->configKeys['callback_url']),
-            'client_id'     =>  config($this->configKeys['client_id']),
+        $post_data = [
+            'grant_type' => 'authorization_code',
+            'code' => $req['code'],
+            'redirect_uri' => config($this->configKeys['callback_url']),
+            'client_id' => config($this->configKeys['client_id']),
             'client_secret' => config($this->configKeys['client_secret']),
-        );
+        ];
         $url = 'https://api.line.me/oauth2/v2.1/token';
 
         $curl = curl_init();
@@ -70,7 +74,7 @@ trait LineSignUp
     {
 
         $curl = curl_init();
-        curl_setopt($curl, CURLOPT_HTTPHEADER, array('Authorization: Bearer ' . $at));
+        curl_setopt($curl, CURLOPT_HTTPHEADER, ['Authorization: Bearer '.$at]);
         curl_setopt($curl, CURLOPT_URL, 'https://api.line.me/v2/profile');
         curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'GET');
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);

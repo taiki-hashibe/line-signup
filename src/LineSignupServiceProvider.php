@@ -2,9 +2,9 @@
 
 namespace LowB\LineSignup;
 
+use LowB\LineSignup\Commands\LineSignupCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use LowB\LineSignup\Commands\LineSignupCommand;
 
 class LineSignupServiceProvider extends PackageServiceProvider
 {

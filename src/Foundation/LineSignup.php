@@ -32,14 +32,14 @@ trait LineSignUp
 
         $uri = 'https://access.line.me/oauth2/v2.1/authorize?';
         $response_type = 'response_type=code';
-        $client_id = '&client_id='.config($this->lineSignupConfigKeys['channel_id']);
-        $redirect_uri = '&redirect_uri='.config($this->lineSignupConfigKeys['callback_url']);
-        $state_uri = '&state='.$state;
+        $client_id = '&client_id=' . config($this->lineSignupConfigKeys['channel_id']);
+        $redirect_uri = '&redirect_uri=' . config($this->lineSignupConfigKeys['callback_url']);
+        $state_uri = '&state=' . $state;
         $scope = '&scope=openid%20profile';
         $prompt = '&prompt=consent';
-        $nonce_uri = '&nonce='.$nonce;
+        $nonce_uri = '&nonce=' . $nonce;
 
-        $uri = $uri.$response_type.$client_id.$redirect_uri.$state_uri.$scope.$prompt.$nonce_uri;
+        $uri = $uri . $response_type . $client_id . $redirect_uri . $state_uri . $scope . $prompt . $nonce_uri;
 
         return redirect($uri);
     }
@@ -67,7 +67,7 @@ trait LineSignUp
         $res = curl_exec($curl);
         curl_close($curl);
         $json = json_decode($res);
-        if (! isset($json->access_token)) {
+        if (!isset($json->access_token)) {
             throw new Exception($json->error_description);
         }
         $accessToken = $json->access_token;
@@ -79,7 +79,7 @@ trait LineSignUp
     {
 
         $curl = curl_init();
-        curl_setopt($curl, CURLOPT_HTTPHEADER, ['Authorization: Bearer '.$at]);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, ['Authorization: Bearer ' . $at]);
         curl_setopt($curl, CURLOPT_URL, 'https://api.line.me/v2/profile');
         curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'GET');
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
@@ -101,7 +101,7 @@ trait LineSignUp
         $user = $model->where($this->lineIdColumnName, $profile->userId)->first();
 
         if ($user) {
-            Auth::guard($this->guard)->login($user);
+            Auth::guard($this->lineSignupGuard)->login($user);
         } else {
             $this->accountDoesNotExist($profile);
         }
@@ -111,7 +111,7 @@ trait LineSignUp
 
     public function accountExist(Authenticatable $user)
     {
-        Auth::guard($this->guard)->login($user);
+        Auth::guard($this->lineSignupGuard)->login($user);
     }
 
     public function accountDoesNotExist(mixed $profile)
@@ -121,6 +121,6 @@ trait LineSignUp
         $model->line_id = $profile->userId;
         $model->name = $profile->displayName;
         $model->save();
-        Auth::guard($this->guard)->login($model);
+        Auth::guard($this->lineSignupGuard)->login($model);
     }
 }

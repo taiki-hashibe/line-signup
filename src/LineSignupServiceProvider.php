@@ -3,9 +3,9 @@
 namespace LowB\LineSignup;
 
 use LowB\LineSignup\Commands\LineSignupCommand;
+use Spatie\LaravelPackageTools\Commands\InstallCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use Spatie\LaravelPackageTools\Commands\InstallCommand;
 
 class LineSignupServiceProvider extends PackageServiceProvider
 {
@@ -24,6 +24,6 @@ class LineSignupServiceProvider extends PackageServiceProvider
             ->hasCommand(LineSignupCommand::class)
             ->hasInstallCommand(function (InstallCommand $command) {
                 $command->publishConfigFile();
-            });;
+            });
     }
 }

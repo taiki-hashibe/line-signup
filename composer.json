@@ -1,0 +1,84 @@
+{
+    "name": "lowb/line-signup",
+    "description": "This is my package line-signup",
+    "keywords": [
+        "lowb",
+        "laravel",
+        "line-signup"
+    ],
+    "homepage": "https://github.com/lowb/line-signup",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "taiki-hashibe",
+            "email": "tb.ba.700@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^8.0.2",
+        "illuminate/contracts": "*",
+        "spatie/laravel-package-tools": "*"
+    },
+    "require-dev": {
+        "laravel/pint": "^1.0",
+        "nunomaduro/collision": "*",
+        "nunomaduro/larastan": "*",
+        "orchestra/testbench": "*",
+        "pestphp/pest": "*",
+        "pestphp/pest-plugin-laravel": "*",
+        "phpstan/extension-installer": "^1.1",
+        "phpstan/phpstan-deprecation-rules": "^1.0",
+        "phpstan/phpstan-phpunit": "^1.0",
+        "spatie/laravel-ray": "^1.26"
+    },
+    "autoload": {
+        "psr-4": {
+            "LowB\\LineSignup\\": "src/",
+            "LowB\\LineSignup\\Database\\Factories\\": "database/factories/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "LowB\\LineSignup\\Tests\\": "tests/",
+            "Workbench\\App\\": "workbench/app/"
+        }
+    },
+    "scripts": {
+        "post-autoload-dump": "@composer run prepare",
+        "clear": "@php vendor/bin/testbench package:purge-line-signup --ansi",
+        "prepare": "@php vendor/bin/testbench package:discover --ansi",
+        "build": [
+            "@composer run prepare",
+            "@php vendor/bin/testbench workbench:build --ansi"
+        ],
+        "start": [
+            "Composer\\Config::disableProcessTimeout",
+            "@composer run build",
+            "@php vendor/bin/testbench serve"
+        ],
+        "analyse": "vendor/bin/phpstan analyse",
+        "test": "vendor/bin/pest",
+        "test-coverage": "vendor/bin/pest --coverage",
+        "format": "vendor/bin/pint"
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true,
+            "phpstan/extension-installer": true
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "LowB\\LineSignup\\LineSignupServiceProvider"
+            ],
+            "aliases": {
+                "LineSignup": "LowB\\LineSignup\\Facades\\LineSignup"
+            }
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

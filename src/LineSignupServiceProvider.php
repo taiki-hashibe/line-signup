@@ -4,6 +4,7 @@ namespace LowB\LineSignup;
 
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
+use Spatie\LaravelPackageTools\Commands\InstallCommand;
 use LowB\LineSignup\Commands\LineSignupCommand;
 
 class LineSignupServiceProvider extends PackageServiceProvider
@@ -20,6 +21,9 @@ class LineSignupServiceProvider extends PackageServiceProvider
             ->hasConfigFile()
             ->hasViews()
             ->hasMigration('create_line-signup_table')
-            ->hasCommand(LineSignupCommand::class);
+            ->hasCommand(LineSignupCommand::class)
+            ->hasInstallCommand(function (InstallCommand $command) {
+                $command->publishConfigFile();
+            });;
     }
 }

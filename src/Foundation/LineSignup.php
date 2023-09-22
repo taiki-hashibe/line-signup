@@ -10,15 +10,15 @@ use Illuminate\Support\Str;
 
 trait LineSignUp
 {
-    public $configKeys = [
-        'client_id' => '',
-        'callback_url' => '',
-        'client_secret' => ''
+    public $lineSignupConfigKeys = [
+        'cannel_id' => 'line-signup.line_login.cannel_id',
+        'callback_url' => 'line-signup.line_login.channel_secret',
+        'client_secret' => 'line-signup.line_login.callback_url'
     ];
-    public string $modelClass = '';
-    public string $guard = 'web';
+    public string $lineSignupModelClass = '';
+    public string $lineSignupGuard = 'web';
     public string $lineIdColumnName = 'line_id';
-    public string $redirectRouteName = '';
+    public string $lineSignupRedirectRouteName = '';
 
     public function lineLogin(): RedirectResponse
     {
@@ -26,8 +26,8 @@ trait LineSignUp
 
         $uri = "https://access.line.me/oauth2/v2.1/authorize?";
         $response_type = "response_type=code";
-        $client_id = "&client_id=" . config($this->configKeys['client_id']);
-        $redirect_uri = "&redirect_uri=" . config($this->configKeys['callback_url']);
+        $client_id = "&client_id=" . config($this->lineSignupConfigKeys['cannel_id']);
+        $redirect_uri = "&redirect_uri=" . config($this->lineSignupConfigKeys['callback_url']);
         $state_uri = "&state=" . $state;
         $scope = "&scope=openid%20profile";
         $prompt = "&prompt=consent";
@@ -44,9 +44,9 @@ trait LineSignUp
         $post_data = array(
             'grant_type'    => 'authorization_code',
             'code'          => $req['code'],
-            'redirect_uri'  => config($this->configKeys['callback_url']),
-            'client_id'     =>  config($this->configKeys['client_id']),
-            'client_secret' => config($this->configKeys['client_secret']),
+            'redirect_uri'  => config($this->lineSignupConfigKeys['callback_url']),
+            'cannel_id'     =>  config($this->lineSignupConfigKeys['cannel_id']),
+            'client_secret' => config($this->lineSignupConfigKeys['client_secret']),
         );
         $url = 'https://api.line.me/oauth2/v2.1/token';
 
@@ -88,7 +88,7 @@ trait LineSignUp
         $accessToken = $this->getAccessToken($request);
         $profile = $this->getProfile($accessToken);
 
-        $model = app()->make($this->modelClass);
+        $model = app()->make($this->lineSignupModelClass);
         $user = $model->where($this->lineIdColumnName, $profile->userId)->first();
 
         if ($user) {
@@ -96,7 +96,7 @@ trait LineSignUp
         } else {
         }
 
-        return redirect()->route($this->redirectRouteName);
+        return redirect()->route($this->lineSignupRedirectRouteName);
     }
 
     public function accountExist(Authenticatable $user)
@@ -106,7 +106,7 @@ trait LineSignUp
 
     public function accountDoesNotExist(mixed $profile)
     {
-        $model = app()->make($this->modelClass);
+        $model = app()->make($this->lineSignupModelClass);
         $model->provider = 'line';
         $model->line_id = $profile->userId;
         $model->name = $profile->displayName;

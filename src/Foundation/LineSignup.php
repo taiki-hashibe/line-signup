@@ -26,7 +26,7 @@ trait LineSignUp
 
         $uri = "https://access.line.me/oauth2/v2.1/authorize?";
         $response_type = "response_type=code";
-        $client_id = "&client_id=" . config($this->lineSignupConfigKeys['cannel_id']);
+        $client_id = "&client_id=" . config($this->lineSignupConfigKeys['channel_id']);
         $redirect_uri = "&redirect_uri=" . config($this->lineSignupConfigKeys['callback_url']);
         $state_uri = "&state=" . $state;
         $scope = "&scope=openid%20profile";

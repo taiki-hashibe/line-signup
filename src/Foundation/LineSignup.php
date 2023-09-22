@@ -13,17 +13,20 @@ trait LineSignUp
     public $lineSignupConfigKeys = [
         'channel_id' => 'line-signup.line_login.channel_id',
         'callback_url' => 'line-signup.line_login.callback_url',
-        'client_secret' => 'line-signup.line_login.channel_secret'
+        'client_secret' => 'line-signup.line_login.channel_secret',
     ];
+
     public string $lineSignupModelClass = '';
+
     public string $lineSignupGuard = 'web';
+
     public string $lineIdColumnName = 'line_id';
+
     public string $lineSignupRedirectRouteName = '';
 
     public function lineLogin(): RedirectResponse
     {
         $state = Str::random(32);
-
         $uri = "https://access.line.me/oauth2/v2.1/authorize?";
         $response_type = "response_type=code";
         $client_id = "&client_id=" . config($this->lineSignupConfigKeys['channel_id']);
@@ -41,13 +44,13 @@ trait LineSignUp
     public function getAccessToken($req): mixed
     {
         $headers = ['Content-Type: application/x-www-form-urlencoded'];
-        $post_data = array(
-            'grant_type'    => 'authorization_code',
-            'code'          => $req['code'],
-            'redirect_uri'  => config($this->lineSignupConfigKeys['callback_url']),
-            'client_id'     =>  config($this->lineSignupConfigKeys['channel_id']),
+        $post_data = [
+            'grant_type' => 'authorization_code',
+            'code' => $req['code'],
+            'redirect_uri' => config($this->lineSignupConfigKeys['callback_url']),
+            'client_id' => config($this->lineSignupConfigKeys['channel_id']),
             'client_secret' => config($this->lineSignupConfigKeys['client_secret']),
-        );
+        ];
         $url = 'https://api.line.me/oauth2/v2.1/token';
 
         $curl = curl_init();
@@ -71,7 +74,7 @@ trait LineSignUp
     {
 
         $curl = curl_init();
-        curl_setopt($curl, CURLOPT_HTTPHEADER, array('Authorization: Bearer ' . $at));
+        curl_setopt($curl, CURLOPT_HTTPHEADER, ['Authorization: Bearer ' . $at]);
         curl_setopt($curl, CURLOPT_URL, 'https://api.line.me/v2/profile');
         curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'GET');
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
